@@ -1,18 +1,33 @@
 const User=require('../model/User');
 
 exports.adduser=async(req,res,next)=>{
+   const first=  req.params.firstName
+   const last=req.params.lastName
+
+  if(!(last &&first))
+  {
+   res.status(400).json({message:" you should insert lastName + firstName"})
+  }
+  //res.send({message:{first , last}})
     const user= await User.create({
-        userFirstName:"fajer",
+        userFirstName:first,
         
-        userLastName: "ALHAMAD"
+        userLastName: last
 
     })
-    res.send({message:"hi"})
+    res.send({message:user,status:true})
 }
 exports.getuser= async(req,res,next)=>{
 
     const id=req.params.id;
-    await User.findOne({user_id:id}).then(data=>{
+    await User.findOne({where:{user_id:id}}).then(data=>{
+      if(!data)
+      {
+        res.status(400).json({message:" data not found "})
+        
+
+      }
+      else
         res.send(data)
     })
 }
@@ -20,7 +35,7 @@ exports.getuser= async(req,res,next)=>{
 
 exports.deleteUser = async(req, res, next) => {
     const id = req.params.id;
-  await  User.findOne({user_id:id})
+  await  User.findOne({where:{user_id:id}})
       .then(data => {
         if (!data) {
          res.send({message:"no data"})
@@ -51,7 +66,7 @@ exports.deleteUser = async(req, res, next) => {
     
       return user.save().then(result => {
         console.log('UPDATED PRODUCT!');
-       res.send({message:" UPDATED SUCCESS"})
+       res.send({data:result,message:" UPDATED SUCCESS"})
       });
     })
     .catch(err => {

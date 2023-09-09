@@ -4,7 +4,7 @@ const router = express.Router();
 
 
 
-router.post('/add',UserController.adduser);
+router.post('/add/:firstName/:lastName',UserController.adduser);
 
 router.get('/get/:id',UserController.getuser)
 router.put('/update/:id',UserController.updateuser)
